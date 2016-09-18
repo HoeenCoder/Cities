@@ -81,16 +81,16 @@ class Canvas {
       this.target = { x : 0, y: 0 };
       for (var i = 0, len = list.length; i < len; i++) {
     	  if (list[i] == global.KEY_LEFT || list[i] == global.KEY_LEFT_ALT) {
-	        if(this.velo.x > -global.player.speed) this.velo.x--;
+	        if(this.velo.x > -global.player.speed) this.velo.x -= 3;
         }
         if (list[i] == global.KEY_RIGHT || list[i] == global.KEY_RIGHT_ALT) {
-          if(this.velo.x < global.player.speed) this.velo.x++;
+          if(this.velo.x < global.player.speed) this.velo.x += 3;
         }
         if (list[i] == global.KEY_UP || list[i] == global.KEY_UP_ALT) {
-          if(this.velo.y > -global.player.speed) this.velo.y--;
+          if(this.velo.y > -global.player.speed) this.velo.y -= 3;
         }
         if (list[i] == global.KEY_DOWN || list[i] == global.KEY_DOWN_ALT) {
-          if(this.velo.y < global.player.speed) this.velo.y++;
+          if(this.velo.y < global.player.speed) this.velo.y += 3;
         }
       }
       //Apply friction

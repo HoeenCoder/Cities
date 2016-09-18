@@ -21,6 +21,12 @@ var leaderboardUpdated = false;
 var V = SAT.Vector;
 var C = SAT.Circle;
 
+function startOffset(i) {
+	let offset = i*(i%2!==0 ? (c.baseRadius/2) : (c.baseRadius + c.baseRadius/2));
+	let negate = Math.round(Math.random());
+	return negate ? -i*(i%2!==0 ? (c.baseRadius/2) : (c.baseRadius + c.baseRadius/2)) : i*(i%2!==0 ? (c.baseRadius/2) : (c.baseRadius + c.baseRadius/2));
+}
+
 io.on('connection', function(socket) {
 	console.log('A user connected.');
 
@@ -28,13 +34,17 @@ io.on('connection', function(socket) {
 	var position = c.newPlayerInitPosition == 'random' ? {x: Math.round(Math.random() * c.gameWidth), y: Math.round(Math.random() * c.gameHeight)} : c.newPlayerInitPosition;
 	var hp = c.defaulthp, maxhp = c.defaulthp;
 
-	var tents = [{
-		radius: c.baseRadius,
-		x: position.x,
-		y: position.y,
-		hp: hp,
-		maxhp: maxhp,
-	}];
+	var tents = [];
+	for(let i = 0; i < c.numTents; i++) {
+		tents.push({
+			radius: c.baseRadius,
+			x: position.x + startOffset(i),
+			y: position.y + startOffset(i),
+			speed: c.baseSpeed,
+			hp: hp,
+			maxhp: maxhp
+		});
+	}
 
 	var level = c.defaultLvl > 0 && c.defaultLvl < 46 ? c.defaultLvl : 1;
 	var points = 0; //change this to an equation that issues the correct number if points based on level.
@@ -78,13 +88,17 @@ io.on('connection', function(socket) {
 			player.velo.x = 0;
 			player.velo.y = 0;
 			player.speed = c.baseSpeed;
-			var tents = [{
-				radius: c.baseRadius,
-				x: position.x,
-				y: position.y,
-				hp: hp,
-				maxhp: maxhp,
-			}];
+			var tents = [];
+			for(let i = 0; i < c.numTents; i++) {
+				tents.push({
+					radius: c.baseRadius,
+					x: position.x + startOffset(i),
+					y: position.y + startOffset(i),
+					speed: c.baseSpeed,
+					hp: hp,
+					maxhp: maxhp
+				});
+			}
 
 			player.points = 0;
 			player.level = c.defaultLvl > 0 ? c.defaultLvl : 1;
@@ -133,21 +147,20 @@ io.on('connection', function(socket) {
 
 function movePlayer(player) {
     var x =0,y =0;
+		if(player.stationary) return;
     for(var i=0; i<player.tents.length; i++) {
-			  if(player.stationary) return;
-        var target = {
-            x: player.x - player.tents[i].x + player.target.x,
-            y: player.y - player.tents[i].y + player.target.y
+				var target = {
+            x: (player.x - player.tents[i].x) + player.target.x,
+            y: (player.y - player.tents[i].y) + player.target.y
         };
         var dist = Math.sqrt(Math.pow(target.y, 2) + Math.pow(target.x, 2));
         var deg = Math.atan2(target.y, target.x);
         var slowDown = 1;
-        /*if(player.tents[i].speed <= 6.25) {
-            slowDown = util.log(player.tents[i].mass, c.slowBase) - initMassLog + 1;
-        }*/
-
-        var deltaY = player.speed * Math.sin(deg) / slowDown;
-        var deltaX = player.speed * Math.cos(deg) / slowDown;
+        //if(player.tents[i].speed <= 6.25) {
+            //slowDown = util.log(radiusToMass(player.tents[i].radius), 4.5) - util.log(radiusToMass(player.tents[i].radius), 4.5) + 1;
+        //}
+				var deltaY = 3 * Math.sin(deg) / slowDown;
+				var deltaX = 3 * Math.cos(deg) / slowDown;
 
         if(player.speed > c.maxSpeed) {
             player.speed -= 0.5;
@@ -178,7 +191,7 @@ function movePlayer(player) {
                             player.tents[i].y--;
                         } else if((player.tents[i].y > player.tents[j].y)) {
                             player.tents[i].y++;
-                        }
+                        };
                     //}
                     /*else if(distance < radiusTotal / 1.75) { //Merge into one.
                         player.tents[i].mass += player.tents[j].mass;
@@ -215,6 +228,10 @@ function searchUsers(id) {
 		if(users[i].id === id) return i;
 	}
 	return -1;
+}
+
+function radiusToMass(r) {
+	return Math.pow((r-4)/6,2);
 }
 
 function tickPlayer(currentPlayer) {

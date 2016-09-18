@@ -27,7 +27,7 @@ var global = {
     gameHeight: 0,
     xoffset: -0,
     yoffset: -0,
-    friction: 0.93,
+    friction: 0.96,
     gameStart: false,
     disconnected: false,
     died: false,

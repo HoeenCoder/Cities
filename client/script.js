@@ -157,7 +157,15 @@ function animloop() {
 }
 
 function veloLoop() {
-    window.canvas.updateTarget(window.canvas.directions);
+    //window.canvas.updateTarget(window.canvas.directions);
+    if(window.canvas.directions.length == 0) {
+      window.canvas.velo.x *= global.friction;
+      window.canvas.velo.y *= global.friction;
+      window.canvas.target.x = window.canvas.velo.x;
+      window.canvas.target.y = window.canvas.velo.y;
+      global.target = window.canvas.target;
+      global.velo = window.canvas.velo;
+    }
 }
 
 function gameLoop() {
