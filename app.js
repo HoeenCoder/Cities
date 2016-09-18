@@ -21,10 +21,16 @@ var leaderboardUpdated = false;
 var V = SAT.Vector;
 var C = SAT.Circle;
 
+var offsetFlag = false;
 function startOffset(i) {
-	let offset = i*(i%2!==0 ? (c.baseRadius/2) : (c.baseRadius + c.baseRadius/2));
-	let negate = Math.round(Math.random());
-	return negate ? -i*(i%2!==0 ? (c.baseRadius/2) : (c.baseRadius + c.baseRadius/2)) : i*(i%2!==0 ? (c.baseRadius/2) : (c.baseRadius + c.baseRadius/2));
+	//let offset = i*(i%2!==0 ? (c.baseRadius/2) : (c.baseRadius + c.baseRadius/2));
+	//let negate = Math.round(Math.random());
+	//return negate ? -i*(i%2!==0 ? (c.baseRadius/2) : (c.baseRadius + c.baseRadius/2)) : i*(i%2!==0 ? (c.baseRadius/2) : (c.baseRadius + c.baseRadius/2));
+	
+	let offset = i%2!==0 ? i*c.baseRadius : i==0 ? 0 : (i-1)*c.baseRadius;
+	if(offsetFlag) offset = i%2!==0 ? c.baseRadius : 0;
+	offsetFlag = !offsetFlag;
+	return offset;
 }
 
 io.on('connection', function(socket) {
