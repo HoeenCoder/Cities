@@ -26,7 +26,7 @@ function startOffset(i) {
 	//let offset = i*(i%2!==0 ? (c.baseRadius/2) : (c.baseRadius + c.baseRadius/2));
 	//let negate = Math.round(Math.random());
 	//return negate ? -i*(i%2!==0 ? (c.baseRadius/2) : (c.baseRadius + c.baseRadius/2)) : i*(i%2!==0 ? (c.baseRadius/2) : (c.baseRadius + c.baseRadius/2));
-	
+
 	let offset = i%2!==0 ? i*c.baseRadius : i==0 ? 0 : (i-1)*c.baseRadius;
 	if(offsetFlag) offset = i%2!==0 ? c.baseRadius : 0;
 	offsetFlag = !offsetFlag;
@@ -51,6 +51,7 @@ io.on('connection', function(socket) {
 			maxhp: maxhp
 		});
 	}
+	offsetFlag = false;
 
 	var level = c.defaultLvl > 0 && c.defaultLvl < 46 ? c.defaultLvl : 1;
 	var points = 0; //change this to an equation that issues the correct number if points based on level.
@@ -105,6 +106,7 @@ io.on('connection', function(socket) {
 					maxhp: maxhp
 				});
 			}
+			offsetFlag = false; //reset
 
 			player.points = 0;
 			player.level = c.defaultLvl > 0 ? c.defaultLvl : 1;
