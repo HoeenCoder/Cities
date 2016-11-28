@@ -16,4 +16,6 @@ Cities is a simple game where the goal is to build up your city of tents and bec
 - [ ] Upgrades
 - [ ] More
 
+Development is on hold until further notice. If your interested in reviving the project, check out our dev chat or open a pull request with changes to add.
+
 More details are coming soon. In the mean time why don't you check out our [Wiki](https://github.com/HoeenCoder/Cities/wiki)?
